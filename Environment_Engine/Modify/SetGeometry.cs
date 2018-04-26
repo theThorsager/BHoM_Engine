@@ -39,5 +39,15 @@ namespace BH.Engine.Environment
         }
 
         /***************************************************/
+
+        public static BuildingElementPanel SetGeometry(this BuildingElementPanel buildingElementPanel, ICurve curve)
+        {
+            PolyCurve polycurve = Engine.Geometry.Create.PolyCurve(new List<ICurve>() { curve });
+            BuildingElementPanel aBuildingElementPanel = buildingElementPanel.GetShallowClone() as BuildingElementPanel;
+            aBuildingElementPanel.PolyCurve = polycurve;
+            return aBuildingElementPanel;
+        }
+
+        /***************************************************/
     }
 }

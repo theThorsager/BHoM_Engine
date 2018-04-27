@@ -42,12 +42,24 @@ namespace BH.Engine.Environment
 
         public static BuildingElementPanel SetGeometry(this BuildingElementPanel buildingElementPanel, ICurve curve)
         {
-            PolyCurve polycurve = Engine.Geometry.Create.PolyCurve(new List<ICurve>() { curve });
-            BuildingElementPanel aBuildingElementPanel = buildingElementPanel.GetShallowClone() as BuildingElementPanel;
-            aBuildingElementPanel.PolyCurve = polycurve;
-            return aBuildingElementPanel;
+            return SetGeometry(buildingElementPanel, Geometry.Create.PolyCurve(new List<ICurve>() { curve }));
         }
 
         /***************************************************/
+
+        public static BuildingElement SetGeometry(BuildingElement buildingElement, ICurve curve)
+        {
+            return SetGeometry(buildingElement, Geometry.Create.PolyCurve(new List<ICurve>() { curve }));
+        }
+
+        /***************************************************/
+
+        public static BuildingElement SetGeometry(BuildingElement buildingElement, PolyCurve polyCurve)
+        {
+            BuildingElement aBuildingElement = buildingElement.GetShallowClone() as BuildingElement;
+            IBuildingElementGeometry aIBuildingElementGeometry = ISetGeometry(aBuildingElement.BuildingElementGeometry, polyCurve);
+            aBuildingElement.BuildingElementGeometry = aIBuildingElementGeometry;
+            return aBuildingElement;
+        }
     }
 }

@@ -25,6 +25,20 @@ namespace BH.Engine.Environment
 
         /***************************************************/
 
+        public static BuildingElement BuildingElement(BuildingElement buildingElement, IEnumerable<Polyline> polyLines)
+        {
+            return Create.BuildingElement(buildingElement.BuildingElementProperties, Create.BuildingElementPanel(polyLines), buildingElement.Level);
+        }
+
+        /***************************************************/
+
+        public static BuildingElement BuildingElement(BuildingElement buildingElement, ICurve curve)
+        {
+            return Create.BuildingElement(buildingElement.BuildingElementProperties, Create.BuildingElementPanel(new ICurve[] { curve }), buildingElement.Level);
+        }
+
+        /***************************************************/
+
         public static BuildingElement BuildingElement(BuildingElementPanel buildingElementPanel)
         {
             return new BuildingElement

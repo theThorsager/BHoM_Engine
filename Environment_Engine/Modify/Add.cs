@@ -52,6 +52,7 @@ namespace BH.Engine.Environment
 
             aBuilding.Spaces.Add(space);
 
+            //TODO: Add missing levels to project
             if (space.Level == null)
             {
                 // BoundingBox
@@ -60,6 +61,24 @@ namespace BH.Engine.Environment
             {
 
             }
+
+            return aBuilding;
+        }
+
+        /***************************************************/
+
+        public static Building Add(this Building building, BuildingElement buildingElement)
+        {
+            Building aBuilding = building.GetShallowClone() as Building;
+            aBuilding.BuildingElements = new List<BuildingElement>(building.BuildingElements);
+
+            if (buildingElement == null)
+                return null;
+
+            aBuilding.BuildingElements.Add(buildingElement);
+
+            //TODO: Add missing BuildingElementProperties to building
+            //TODO: Add missing Level to project
 
             return aBuilding;
         }

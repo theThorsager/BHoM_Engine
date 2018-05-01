@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddBuildingElement.cs" />
+    <Compile Include="AddBuildingElements.cs" />
     <Compile Include="Convert\PanelPlanar.cs" />
     <Compile Include="Create\Building.cs" />
     <Compile Include="Create\BuildingElement.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Query\Bounds.cs" />
     <Compile Include="Query\EquipmentProprerties.cs" />
     <Compile Include="Modify\RemoveBuildingElement.cs" />
+    <Compile Include="RemoveBuildingElements.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Structure_Engine\Structure_Engine.csproj">

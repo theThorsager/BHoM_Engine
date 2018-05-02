@@ -48,12 +48,15 @@
     <Compile Include="Compute\RunExtentionMethod.cs" />
     <Compile Include="Convert\ToText.cs" />
     <Compile Include="Create\Type.cs" />
+    <Compile Include="Query\OutputDescription.cs" />
+    <Compile Include="Query\InputDescriptions.cs" />
     <Compile Include="Query\DistinctProperties.cs" />
     <Compile Include="Query\IsLegal.cs" />
     <Compile Include="Query\Path.cs" />
     <Compile Include="Query\ExtentionMethods.cs" />
     <Compile Include="Query\MethodList.cs" />
     <Compile Include="Query\EnumList.cs" />
+    <Compile Include="Query\Description.cs" />
     <Compile Include="Query\TypeList.cs" />
     <Compile Include="Query\TypeDictionary.cs" />
     <Compile Include="Query\PropertyDictionary.cs" />

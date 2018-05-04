@@ -5,6 +5,9 @@ using BH.Engine.Geometry;
 using BH.oM.Architecture.Elements;
 using System.Collections.Generic;
 
+using System;
+using System.Linq;
+
 namespace BH.Engine.Environment
 {
     public static partial class Modify
@@ -26,10 +29,21 @@ namespace BH.Engine.Environment
             {
                 BuildingElement aBuildingElement_Temp = aBuilding.BuildingElements.Find(x => x.BHoM_Guid == aBuildingElement.BHoM_Guid);
                 if (aBuildingElement_Temp != null)
+                {
+                    foreach (Guid g in aBuildingElement_Temp.AdjacentSpaces)
+                    {
+                        var s = aBuilding.Spaces.Where(x => x.BHoM_Guid == g).FirstOrDefault();
+                        if (s != null)
+                        {
+                            s.BuildingElements.Remove(aBuildingElement_Temp);
+                        }
+                    }
+
                     aBuilding.BuildingElements.Remove(aBuildingElement_Temp);
+                }
             }
 
-            //TODO: Solve adjacent spaces
+            //TODO: Test for all cases
 
             return aBuilding;
         }

@@ -4,6 +4,9 @@ using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.oM.Architecture.Elements;
 
+using System.Linq;
+using System;
+
 namespace BH.Engine.Environment
 {
     public static partial class Modify
@@ -23,9 +26,20 @@ namespace BH.Engine.Environment
 
             BuildingElement aBuildingElement = aBuilding.BuildingElements.Find(x => x.BHoM_Guid == buildingElement.BHoM_Guid);
             if(aBuildingElement != null)
+            {
+                foreach(Guid g in aBuildingElement.AdjacentSpaces)
+                {
+                    var s = aBuilding.Spaces.Where(x => x.BHoM_Guid == g).FirstOrDefault();
+                    if(s != null)
+                    {
+                        s.BuildingElements.Remove(aBuildingElement);
+                    }
+                }
+                
                 aBuilding.BuildingElements.Remove(aBuildingElement);
+            }
 
-            //TODO: Solve adjacent spaces
+            //TODO: Test for all cases
 
             return aBuilding;
         }

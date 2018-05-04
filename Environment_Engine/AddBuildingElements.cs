@@ -1,12 +1,22 @@
-﻿using BH.oM.Environmental.Interface;
+﻿using System;
+using System.Linq;
+
+using BH.oM.Environmental.Interface;
 using BH.oM.Environmental.Elements;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.oM.Architecture.Elements;
 using System.Collections.Generic;
 
+using BH.Engine.Geometry;
+
+using ClipperLib;
+
 namespace BH.Engine.Environment
 {
+    using Polygon = List<IntPoint>;
+    using Polygons = List<List<IntPoint>>;
+
     public static partial class Modify
     {
         /***************************************************/
@@ -21,8 +31,22 @@ namespace BH.Engine.Environment
             if (buildingElements == null)
                 return null;
 
-            aBuilding.BuildingElements.AddRange(buildingElements);
+            foreach(BuildingElement be in buildingElements)
+            {
+                foreach(Guid g in be.AdjacentSpaces)
+                {
+                    var s = aBuilding.Spaces.Where(x => x.BHoM_Guid == g).FirstOrDefault();
+                    if (s != null)
+                    {
+                        aBuilding.Spaces.Where(x => x.BHoM_Guid == g).FirstOrDefault().BuildingElements.Add(be);
+                    }
 
+                }
+
+                aBuilding.BuildingElements.Add(be);
+            }
+
+            //TODO: Test for all cases
             //TODO: Add missing BuildingElementProperties to building
             //TODO: Add missing Level to project
 

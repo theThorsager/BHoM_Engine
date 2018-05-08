@@ -33,6 +33,16 @@ namespace BH.Engine.Environment
 
             foreach(BuildingElement be in buildingElements)
             {
+                //Change the GUID to a unique one
+                Guid g = Guid.NewGuid();
+                while (aBuilding.BuildingElements.Where(x => x.BHoM_Guid == g).FirstOrDefault() != null)
+                    g = Guid.NewGuid(); //Ensure a unique ID is used that is not in use by other elements
+
+                be.BHoM_Guid = g;
+            }
+
+            foreach(BuildingElement be in buildingElements)
+            {
                 foreach(Guid g in be.AdjacentSpaces)
                 {
                     var s = aBuilding.Spaces.Where(x => x.BHoM_Guid == g).FirstOrDefault();

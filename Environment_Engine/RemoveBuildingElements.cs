@@ -30,14 +30,16 @@ namespace BH.Engine.Environment
                 BuildingElement aBuildingElement_Temp = aBuilding.BuildingElements.Find(x => x.BHoM_Guid == aBuildingElement.BHoM_Guid);
                 if (aBuildingElement_Temp != null)
                 {
-                    foreach (Guid g in aBuildingElement_Temp.AdjacentSpaces)
+                    //Remove the BE from all the spaces
+                    for(int x = 0; x < aBuilding.Spaces.Count; x++)
                     {
-                        var s = aBuilding.Spaces.Where(x => x.BHoM_Guid == g).FirstOrDefault();
-                        if (s != null)
+                        for(int y = 0; y < aBuilding.Spaces[x].BuildingElements.Count; y++)
                         {
-                            s.BuildingElements.Remove(aBuildingElement_Temp);
+                            if (aBuilding.Spaces[x].BuildingElements[y].BHoM_Guid == aBuildingElement.BHoM_Guid)
+                                aBuilding.Spaces[x].BuildingElements.Remove(aBuildingElement);
                         }
                     }
+                    //This is a bit of a slower method but is the only one that worked of all the ones tested...
 
                     aBuilding.BuildingElements.Remove(aBuildingElement_Temp);
                 }

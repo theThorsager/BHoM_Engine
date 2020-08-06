@@ -26,16 +26,44 @@ using System.Linq;
 using System;
 using BH.Engine.Reflection;
 using BH.oM.Reflection.Attributes;
+using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Base;
 
 namespace BH.Engine.Geometry
 {
     public static partial class Query
     {
+        /***************************************************/
+        /**** Public Methods - Misc                     ****/
+        /***************************************************/
+
+        public static Point Centroid(this PlanarSurface surface, double tolerance = Tolerance.Distance)
+        {
+            return Centroid(new List<ICurve> { surface.ExternalBoundary }, surface.InternalBoundaries, tolerance);
+        }
+
+        /***************************************************/
+
+
+        public static Point Centroid(this IProfile profile, double tolerance = Tolerance.Distance)
+        {
+            return Centroid(profile.Edges, new List<ICurve>(), tolerance);
+        }
+
+        /***************************************************/
+
+        //TODO: Move to structure_engine probably
+
+        //public static Point Centroid(this Panel panel, double tolerance = Tolerance.Distance)
+        //{
+        //    return Centroid(panel.ExternalEdges.Select(e => e.Curve).ToList(), panel.Openings.Select(o => o.Edges.Select(e => e.Curve)).SelectMany(o => o).ToList(), tolerance);
+        //}
+
 
         /***************************************************/
         /**** Public Methods - Curves                   ****/
         /***************************************************/
-        
+
         public static Point Centroid(this Polyline curve, double tolerance = Tolerance.Distance)
         {
             if (!curve.IsPlanar(tolerance))
@@ -53,7 +81,6 @@ namespace BH.Engine.Geometry
                 Reflection.Compute.RecordWarning("Curve is self intersecting");
                 return null;
             }
-
 
             double xc, yc, zc;
             double xc0 = 0, yc0 = 0, zc0 = 0;
@@ -204,28 +231,28 @@ namespace BH.Engine.Geometry
             return new Point { X = xc, Y = yc, Z = zc };
 
         }
-        
+
         /***************************************************/
 
         public static Point Centroid(this Ellipse ellipse, double tolerance = Tolerance.Distance)
         {
             return ellipse.Centre;
         }
-                
+
         /***************************************************/
 
         public static Point Centroid(this Circle circle, double tolerance = Tolerance.Distance)
         {
             return circle.Centre;
         }
-        
+
         /***************************************************/
 
         public static Point Centroid(this Line line, double tolerance = Tolerance.Distance)
         {
             return line.PointAtParameter(0.5);
         }
-        
+
         /***************************************************/
 
         [NotImplemented]
@@ -233,7 +260,7 @@ namespace BH.Engine.Geometry
         {
             throw new NotImplementedException();
         }
-        
+
         /***************************************************/
 
         [NotImplemented]
@@ -241,9 +268,37 @@ namespace BH.Engine.Geometry
         {
             throw new NotImplementedException();
         }
-        
+
         /***************************************************/
         /**** Private methods                           ****/
+        /***************************************************/
+
+        private static Point Centroid(this IEnumerable<ICurve> outlines, IEnumerable<ICurve> openings = null, double tolerance = Tolerance.Distance)
+        {
+            Point centroid = new Point();
+            double area = 0;
+
+            foreach (ICurve outline in outlines)
+            {
+                double outlineArea = outline.IArea();
+                centroid += (outline.ICentroid() * outlineArea);
+                area += outlineArea;
+            }
+
+            if (openings != null)
+                foreach (ICurve opening in openings)
+                {
+                    Point openingCentroid = opening.ICentroid();
+                    double openingArea = opening.IArea();
+                    centroid.X -= openingCentroid.X * openingArea;
+                    centroid.Y -= openingCentroid.Y * openingArea;
+                    centroid.Z -= openingCentroid.Z * openingArea;
+                    area -= openingArea;
+                }
+
+            return centroid / area;
+        }
+
         /***************************************************/
 
         private static Point CircularSegmentCentroid(this Arc arc)
@@ -258,7 +313,7 @@ namespace BH.Engine.Geometry
 
             return o + ((v / arc.Radius) * length);
         }
-                       
+
         /***************************************************/
         /**** Public Methods - Interfaces               ****/
         /***************************************************/
@@ -271,4 +326,3 @@ namespace BH.Engine.Geometry
         /***************************************************/
     }
 }
-
